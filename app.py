@@ -78,9 +78,13 @@ if uploaded_file is not None:
             fig_trend = crea_revenue_trend(revenue_df)
             st.plotly_chart(fig_trend, use_container_width=True)
             
+             # Trend wages
+            st.subheader("💰 Wage Cost Analysis")
             
+            # Checkbox per switch business - day
+            per_day = st.checkbox("Aggrega per giorno", value=False)
             # Trend wages
-            fig_wages = crea_wage_trend(revenue_df)
+            fig_wages = crea_wage_trend(df)
             st.plotly_chart(fig_wages, use_container_width=True)
 else:
     st.info("👆 Carica un file CSV per iniziare l'analisi")
