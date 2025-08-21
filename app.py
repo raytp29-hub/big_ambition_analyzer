@@ -125,7 +125,7 @@ if uploaded_file is not None:
             )
         
             
-            col1, col2, col3, col4 = st.columns(4)
+            col1, col2, col3, col4, col5 = st.columns(5)
             
             with col1:
                 st.metric("💰 Revenue Totale", f"€{p_l_df['revenue'].sum():,.2f}")
@@ -134,6 +134,8 @@ if uploaded_file is not None:
             with col3:
                 st.metric("📈 Profitto Totale", f"€{p_l_df['profit'].sum():,.2f}")
             with col4:
+                st.metric("Costi Totali", f"€{(p_l_df["delivery"].sum() + p_l_df["costi_diretti"].sum()):,.2f}")
+            with col5:
                 margin = (p_l_df['profit'].sum() / p_l_df['revenue'].sum() * 100) if p_l_df['revenue'].sum() > 0 else 0
                 st.metric("📊 Margine %", f"{margin:.1f}%")
         else:
