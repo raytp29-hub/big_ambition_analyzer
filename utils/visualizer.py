@@ -7,6 +7,7 @@ import streamlit as st
 
 
 
+
 def crea_revenue_trend(df):
     revenue_per_day = df.groupby(["business","day"])["price"].sum().reset_index().sort_values(["day","business"], ascending=[True,True])
     
@@ -42,10 +43,6 @@ def crea_revenue_trend(df):
 
 
 def crea_wage_trend(df, kind="bar", per_day=False, per_business=None, debug=False):
-    import numpy as np
-    import pandas as pd
-    import plotly.express as px
-    import streamlit as st
 
     if df is None:
         raise ValueError("df non può essere None")

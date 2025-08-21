@@ -6,7 +6,7 @@ from utils.cleaner import pulisci_csv_big_ambitions
 from utils.analyzer import estrai_business_da_revenue
 from utils.visualizer import crea_revenue_trend
 from utils.visualizer import crea_wage_trend
-
+from utils.analyzer import crea_p_l
 
 
 
@@ -78,13 +78,65 @@ if uploaded_file is not None:
             fig_trend = crea_revenue_trend(revenue_df)
             st.plotly_chart(fig_trend, use_container_width=True)
             
-             # Trend wages
-            st.subheader("💰 Wage Cost Analysis")
+            st.subheader("💸 Analisi Costi Stipendi")
+            col1, col2, col3 = st.columns([2,2,6])
+            with col1:
+                vista_giorno = st.checkbox("Vista per giorno", value=False)
+            with col2:
+                tipo_grafico = st.radio("📊 Tipo", ["bar", "line"], horizontal=True)
+            with col3:
+                business_selezionati = st.multiselect(
+                    "Filtra per business:",
+                    options=business_names,
+                    default=business_names
+                )
+                    
+            try:
+                fig_wages = crea_wage_trend(
+                    df,
+                    kind=tipo_grafico,
+                    per_day=vista_giorno,
+                    per_business=business_selezionati if business_selezionati else None
+                )
+                st.plotly_chart(fig_wages, use_container_width=True)
+            except Exception as e:
+                st.error(f"Errore nell'analisi wages: {str(e)}")
+                
+                
+        # Creazione grafico per P&L
+        
+        st.subheader("💼 Profit & Loss (P&L) - Base")
+        
+        # Calcoliamo P&L
+        p_l_df, costi_generali = crea_p_l(df)
+        
+        if not p_l_df.empty:
+            st.dataframe(
+                p_l_df.style.format({
+                    "revenue":"€{:,.2f}",
+                    "wages":"€{:,.2f}",
+                    "marketing":"€{:,.2f}",
+                    "delivery":"€{:,.2f}",
+                    "profit":"€{:,.2f}",
+                    "costi_diretti":"€{:,.2f}",
+                    "margine_lordo":"€{:,.2f}"
+                }),
+                use_container_width=True
+            )
+        
             
-            # Checkbox per switch business - day
-            per_day = st.checkbox("Aggrega per giorno", value=False)
-            # Trend wages
-            fig_wages = crea_wage_trend(df)
-            st.plotly_chart(fig_wages, use_container_width=True)
+            col1, col2, col3, col4 = st.columns(4)
+            
+            with col1:
+                st.metric("💰 Revenue Totale", f"€{p_l_df['revenue'].sum():,.2f}")
+            with col2:
+                st.metric("💸 Wages Totali", f"€{p_l_df['wages'].sum():,.2f}")
+            with col3:
+                st.metric("📈 Profitto Totale", f"€{p_l_df['profit'].sum():,.2f}")
+            with col4:
+                margin = (p_l_df['profit'].sum() / p_l_df['revenue'].sum() * 100) if p_l_df['revenue'].sum() > 0 else 0
+                st.metric("📊 Margine %", f"{margin:.1f}%")
+        else:
+            st.warning("Nessun dato disponibile per il P&L")        
 else:
     st.info("👆 Carica un file CSV per iniziare l'analisi")
