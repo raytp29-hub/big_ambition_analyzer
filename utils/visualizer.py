@@ -148,3 +148,16 @@ def crea_wage_trend(df, kind="bar", per_day=False, per_business=None, debug=Fals
     return (fig, agg) if debug else fig
 
 
+
+
+
+# Implementazione visualizzazione analisi avanzate 
+
+
+def crea_growth_trend_chart(growth_data, metrica, vista):
+    # Grafici per growth trends
+    pass
+    
+def crea_projection_chart(projections_data):
+    # Grafici per proiezioni future
+    pass
