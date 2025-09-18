@@ -84,7 +84,7 @@ def crea_wage_trend(df, kind="bar", per_day=False, per_business=None, debug=Fals
         if "(" in s and ")" in s:
             try:
                 mid = s.split("(", 1)[1].split(")", 1)[0]
-                mid = mid.replace("Daily Wage", "").replace("daily wage", "").strip()
+                mid = mid.replace("Daily Wage", "").replace("Daily Wage", "").strip()
                 return mid or "Unknown"
             except Exception:
                 return s.strip() or "Unknown"
